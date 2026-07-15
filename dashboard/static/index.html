@@ -1,0 +1,508 @@
+<!doctype html>
+<html lang="fr" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sentinel — Trading Bot</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <h1 class="sr-only">Sentinel — console du trading bot</h1>
+
+  <header class="topbar">
+    <div class="brand">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="m7 13 3-3 4 4 5-5"/></svg>
+      Sentinel <small>trading bot</small>
+    </div>
+    <nav>
+      <a onclick="showSection('dashboard')" data-section="dashboard" class="active" role="button" tabindex="0">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/></svg>
+        Dashboard
+      </a>
+      <a onclick="showSection('watchlist')" data-section="watchlist" role="button" tabindex="0">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg>
+        Watchlist
+      </a>
+      <a onclick="showSection('alerts')" data-section="alerts" role="button" tabindex="0">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+        Alertes
+      </a>
+      <a onclick="showSection('scans')" data-section="scans" role="button" tabindex="0">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        Scans
+      </a>
+      <a onclick="showSection('logs')" data-section="logs" role="button" tabindex="0">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 17 10 11 4 5"/><line x1="12" x2="20" y1="19" y2="19"/></svg>
+        Logs
+      </a>
+      <a onclick="showSection('docs')" data-section="docs" role="button" tabindex="0">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"/><path d="M8 11h8"/><path d="M8 7h6"/></svg>
+        Docs
+      </a>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- ============================== DASHBOARD ============================== -->
+    <section id="dashboard" class="active" style="display:none">
+      <hgroup class="section-head">
+        <h2>Vue d'ensemble</h2>
+        <p>État du marché, connecteurs et activité du jour</p>
+      </hgroup>
+
+      <div class="grid-3">
+        <article class="card">
+          <div class="card-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"/></svg>
+            Marché US
+          </div>
+          <p class="hero-value"><span id="market-status" class="badge badge-open"><span class="dot"></span>Ouvert</span></p>
+          <p class="card-foot">NYSE / NASDAQ · 15 h 30 – 22 h 00 (Paris)</p>
+        </article>
+
+        <article class="card">
+          <div class="card-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="12" x2="12" y2="6"/><line x1="12" y1="12" x2="16" y2="12"/></svg>
+            Dernière analyse
+          </div>
+          <p class="hero-value mono"><span id="last-scan-time">16:00</span></p>
+          <p class="card-foot">Scan n° 248 — 3 symboles · 33 s</p>
+        </article>
+
+        <article class="card">
+          <div class="card-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="10" x2="14" y1="2" y2="2"/><line x1="12" x2="15" y1="14" y2="11"/><circle cx="12" cy="14" r="8"/></svg>
+            Prochaine analyse
+          </div>
+          <p class="hero-value mono"><span id="next-scan-time">16:30</span></p>
+          <p class="card-foot">Cycle de 30 minutes pendant la séance</p>
+        </article>
+      </div>
+
+      <h3 class="sub-head">Connecteurs</h3>
+      <div class="grid-3">
+        <article class="card connector">
+          <div class="conn-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="m7 13 3-3 4 4 5-5"/></svg>
+          </div>
+          <div class="conn-meta">
+            <strong>IBKR</strong>
+            <small>Données de marché &amp; compte</small>
+          </div>
+          <span id="status-ibkr" class="status status-ok"><span class="dot"></span>Connecté</span>
+        </article>
+
+        <article class="card connector">
+          <div class="conn-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/><path d="M4 17v2"/><path d="M5 18H3"/></svg>
+          </div>
+          <div class="conn-meta">
+            <strong>Anthropic</strong>
+            <small>Analyse Claude</small>
+          </div>
+          <span id="status-anthropic" class="status status-ok"><span class="dot"></span>Opérationnel</span>
+        </article>
+
+        <article class="card connector">
+          <div class="conn-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/></svg>
+          </div>
+          <div class="conn-meta">
+            <strong>Telegram</strong>
+            <small>Envoi des alertes</small>
+          </div>
+          <span id="status-telegram" class="status status-ok"><span class="dot"></span>Connecté</span>
+        </article>
+      </div>
+
+      <h3 class="sub-head">Résumé du jour</h3>
+      <div class="grid-3">
+        <article class="card stat">
+          <span class="stat-value">2</span>
+          <span class="stat-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+            Alertes aujourd'hui
+          </span>
+        </article>
+        <article class="card stat">
+          <span class="stat-value">3</span>
+          <span class="stat-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg>
+            Symboles actifs
+          </span>
+        </article>
+        <article class="card stat">
+          <span class="stat-value">PLTR <span class="badge badge-a" title="Acheter et garder">A</span></span>
+          <span class="stat-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+            Dernier signal — 16 h 00
+          </span>
+        </article>
+      </div>
+    </section>
+
+    <!-- ============================== WATCHLIST ============================== -->
+    <section id="watchlist" style="display:none">
+      <hgroup class="section-head">
+        <h2>Watchlist</h2>
+        <p>Symboles suivis et probabilités issues de la dernière analyse</p>
+      </hgroup>
+
+      <article class="card table-card">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Symbole</th>
+                <th class="num">Prob. court</th>
+                <th class="num">Prob. moyen</th>
+                <th>Scénario</th>
+                <th class="num">Risque max</th>
+                <th>Statut</th>
+              </tr>
+            </thead>
+            <tbody id="watchlist-table">
+              <tr>
+                <td class="sym">PLTR</td>
+                <td class="num strong">72&nbsp;%</td>
+                <td class="num">64&nbsp;%</td>
+                <td><span class="badge badge-a" title="Acheter et garder">A</span></td>
+                <td class="num">6&nbsp;%</td>
+                <td><input type="checkbox" role="switch" checked aria-label="Suivi de PLTR"></td>
+              </tr>
+              <tr>
+                <td class="sym">NVDA</td>
+                <td class="num strong">66&nbsp;%</td>
+                <td class="num">70&nbsp;%</td>
+                <td><span class="badge badge-a" title="Acheter et garder">A</span></td>
+                <td class="num">8&nbsp;%</td>
+                <td><input type="checkbox" role="switch" checked aria-label="Suivi de NVDA"></td>
+              </tr>
+              <tr>
+                <td class="sym">AAPL</td>
+                <td class="num">55&nbsp;%</td>
+                <td class="num">58&nbsp;%</td>
+                <td><span class="badge badge-b" title="Surveiller">B</span></td>
+                <td class="num">4&nbsp;%</td>
+                <td><input type="checkbox" role="switch" checked aria-label="Suivi de AAPL"></td>
+              </tr>
+              <tr>
+                <td class="sym">MSFT</td>
+                <td class="num muted">39&nbsp;%</td>
+                <td class="num muted">44&nbsp;%</td>
+                <td><span class="badge badge-c" title="Éviter">C</span></td>
+                <td class="num">3&nbsp;%</td>
+                <td><input type="checkbox" role="switch" aria-label="Suivi de MSFT"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </article>
+    </section>
+
+    <!-- ============================== ALERTES ============================== -->
+    <section id="alerts" style="display:none">
+      <hgroup class="section-head">
+        <h2>Alertes</h2>
+        <p>Signaux ayant franchi le seuil de déclenchement et envoyés sur Telegram</p>
+      </hgroup>
+
+      <article class="card table-card">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Symbole</th>
+                <th class="num">Prob. court</th>
+                <th class="num">Prob. moyen</th>
+                <th>Scénario</th>
+                <th class="num">Risque</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="alerts-table">
+              <tr>
+                <td class="mono">14/07/2026 16:00</td>
+                <td class="sym">PLTR</td>
+                <td class="num strong">72&nbsp;%</td>
+                <td class="num">64&nbsp;%</td>
+                <td><span class="badge badge-a" title="Acheter et garder">A</span></td>
+                <td class="num">6&nbsp;%</td>
+                <td class="cell-action"><button type="button" class="btn-ghost">Voir analyse</button></td>
+              </tr>
+              <tr>
+                <td class="mono">14/07/2026 11:30</td>
+                <td class="sym">NVDA</td>
+                <td class="num strong">69&nbsp;%</td>
+                <td class="num">71&nbsp;%</td>
+                <td><span class="badge badge-a" title="Acheter et garder">A</span></td>
+                <td class="num">8&nbsp;%</td>
+                <td class="cell-action"><button type="button" class="btn-ghost">Voir analyse</button></td>
+              </tr>
+              <tr>
+                <td class="mono">13/07/2026 20:00</td>
+                <td class="sym">NVDA</td>
+                <td class="num strong">67&nbsp;%</td>
+                <td class="num">66&nbsp;%</td>
+                <td><span class="badge badge-a" title="Acheter et garder">A</span></td>
+                <td class="num">8&nbsp;%</td>
+                <td class="cell-action"><button type="button" class="btn-ghost">Voir analyse</button></td>
+              </tr>
+              <tr>
+                <td class="mono">10/07/2026 15:35</td>
+                <td class="sym">AAPL</td>
+                <td class="num strong">66&nbsp;%</td>
+                <td class="num">61&nbsp;%</td>
+                <td><span class="badge badge-a" title="Acheter et garder">A</span></td>
+                <td class="num">4&nbsp;%</td>
+                <td class="cell-action"><button type="button" class="btn-ghost">Voir analyse</button></td>
+              </tr>
+              <tr>
+                <td class="mono">08/07/2026 17:00</td>
+                <td class="sym">MSFT</td>
+                <td class="num">64&nbsp;%</td>
+                <td class="num">60&nbsp;%</td>
+                <td><span class="badge badge-b" title="Surveiller">B</span></td>
+                <td class="num">3&nbsp;%</td>
+                <td class="cell-action"><button type="button" class="btn-ghost">Voir analyse</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </article>
+    </section>
+
+    <!-- ============================== SCANS ============================== -->
+    <section id="scans" style="display:none">
+      <hgroup class="section-head">
+        <h2>Scans</h2>
+        <p>Historique des analyses périodiques, alerte déclenchée si le score atteint le seuil</p>
+      </hgroup>
+
+      <article class="card table-card">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Symbole</th>
+                <th class="num">Prob. court</th>
+                <th class="num">Prob. moyen</th>
+                <th class="num">Score</th>
+                <th>Scénario</th>
+                <th>Déclenchée</th>
+              </tr>
+            </thead>
+            <tbody id="scans-table">
+              <tr>
+                <td class="mono">14/07/2026 16:00</td>
+                <td class="sym">PLTR</td>
+                <td class="num">72&nbsp;%</td>
+                <td class="num">64&nbsp;%</td>
+                <td class="num strong">8,6</td>
+                <td><span class="badge badge-a" title="Acheter et garder">A</span></td>
+                <td><span class="badge badge-open">Oui</span></td>
+              </tr>
+              <tr>
+                <td class="mono">14/07/2026 16:00</td>
+                <td class="sym">NVDA</td>
+                <td class="num">66&nbsp;%</td>
+                <td class="num">70&nbsp;%</td>
+                <td class="num">7,9</td>
+                <td><span class="badge badge-a" title="Acheter et garder">A</span></td>
+                <td><span class="muted">Non</span></td>
+              </tr>
+              <tr>
+                <td class="mono">14/07/2026 16:00</td>
+                <td class="sym">AAPL</td>
+                <td class="num">55&nbsp;%</td>
+                <td class="num">58&nbsp;%</td>
+                <td class="num">6,1</td>
+                <td><span class="badge badge-b" title="Surveiller">B</span></td>
+                <td><span class="muted">Non</span></td>
+              </tr>
+              <tr>
+                <td class="mono">14/07/2026 15:30</td>
+                <td class="sym">PLTR</td>
+                <td class="num">70&nbsp;%</td>
+                <td class="num">63&nbsp;%</td>
+                <td class="num">7,8</td>
+                <td><span class="badge badge-a" title="Acheter et garder">A</span></td>
+                <td><span class="muted">Non</span></td>
+              </tr>
+              <tr>
+                <td class="mono">14/07/2026 15:30</td>
+                <td class="sym">NVDA</td>
+                <td class="num">65&nbsp;%</td>
+                <td class="num">69&nbsp;%</td>
+                <td class="num">7,6</td>
+                <td><span class="badge badge-a" title="Acheter et garder">A</span></td>
+                <td><span class="muted">Non</span></td>
+              </tr>
+              <tr>
+                <td class="mono">14/07/2026 15:30</td>
+                <td class="sym">AAPL</td>
+                <td class="num">54&nbsp;%</td>
+                <td class="num">57&nbsp;%</td>
+                <td class="num">5,9</td>
+                <td><span class="badge badge-b" title="Surveiller">B</span></td>
+                <td><span class="muted">Non</span></td>
+              </tr>
+              <tr>
+                <td class="mono">14/07/2026 11:30</td>
+                <td class="sym">NVDA</td>
+                <td class="num">69&nbsp;%</td>
+                <td class="num">71&nbsp;%</td>
+                <td class="num strong">8,2</td>
+                <td><span class="badge badge-a" title="Acheter et garder">A</span></td>
+                <td><span class="badge badge-open">Oui</span></td>
+              </tr>
+              <tr>
+                <td class="mono">14/07/2026 11:30</td>
+                <td class="sym">PLTR</td>
+                <td class="num">68&nbsp;%</td>
+                <td class="num">62&nbsp;%</td>
+                <td class="num">7,4</td>
+                <td><span class="badge badge-a" title="Acheter et garder">A</span></td>
+                <td><span class="muted">Non</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </article>
+    </section>
+
+    <!-- ============================== LOGS ============================== -->
+    <section id="logs" style="display:none">
+      <hgroup class="section-head">
+        <h2>Logs</h2>
+        <p>Journal d'exécution du bot — 250 dernières lignes</p>
+      </hgroup>
+
+      <article class="card terminal-card">
+        <div class="terminal-head">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 17 10 11 4 5"/><line x1="12" x2="20" y1="19" y2="19"/></svg>
+          sentinel.log
+        </div>
+        <div class="terminal" tabindex="0">
+<pre id="logs-content">[2026-07-14 15:30:11] INFO  Scan n°247 démarré (3 symboles actifs)
+[2026-07-14 15:30:13] INFO  IBKR : snapshot PLTR OK (last=158.42, vol=12.4M)
+[2026-07-14 15:30:14] INFO  IBKR : snapshot NVDA OK (last=1247.80, vol=31.2M)
+[2026-07-14 15:30:15] INFO  IBKR : snapshot AAPL OK (last=243.15, vol=18.7M)
+[2026-07-14 15:30:29] INFO  Claude : analyse PLTR terminée (court 70 %, moyen 63 %, scénario A)
+[2026-07-14 15:30:33] INFO  Claude : analyse NVDA terminée (court 65 %, moyen 69 %, scénario A)
+[2026-07-14 15:30:37] INFO  Claude : analyse AAPL terminée (court 54 %, moyen 57 %, scénario B)
+[2026-07-14 15:30:38] INFO  Scores : PLTR 7.8 · NVDA 7.6 · AAPL 5.9 — aucun seuil franchi
+[2026-07-14 15:30:38] INFO  Scan n°247 terminé en 27 s — prochaine exécution 16:00
+[2026-07-14 16:00:12] INFO  Scan n°248 démarré (3 symboles actifs)
+[2026-07-14 16:00:14] INFO  IBKR : snapshot PLTR OK (last=160.05, vol=14.1M)
+[2026-07-14 16:00:15] INFO  IBKR : snapshot NVDA OK (last=1244.30, vol=32.0M)
+[2026-07-14 16:00:16] INFO  IBKR : snapshot AAPL OK (last=243.60, vol=19.1M)
+[2026-07-14 16:00:17] WARN  IBKR : latence élevée sur le flux temps réel (820 ms)
+[2026-07-14 16:00:31] INFO  Claude : analyse PLTR terminée (court 72 %, moyen 64 %, scénario A)
+[2026-07-14 16:00:35] INFO  Claude : analyse NVDA terminée (court 66 %, moyen 70 %, scénario A)
+[2026-07-14 16:00:39] INFO  Claude : analyse AAPL terminée (court 55 %, moyen 58 %, scénario B)
+[2026-07-14 16:00:40] WARN  Seuil franchi pour PLTR (score 8.6 ≥ 8.0)
+[2026-07-14 16:00:41] INFO  Telegram : alerte PLTR envoyée (message_id=4821)
+[2026-07-14 16:00:41] INFO  Anti-spam : PLTR verrouillé jusqu'à 20:00
+[2026-07-14 16:00:45] INFO  Scan n°248 terminé en 33 s — prochaine exécution 16:30</pre>
+        </div>
+      </article>
+    </section>
+
+    <!-- ============================== DOCS ============================== -->
+    <section id="docs" style="display:none">
+      <hgroup class="section-head">
+        <h2>Documentation</h2>
+        <p>Fonctionnement du bot, scénarios et seuils de déclenchement</p>
+      </hgroup>
+
+      <article class="card prose">
+        <h3>Fonctionnement</h3>
+        <p>
+          Sentinel analyse les symboles actifs de la watchlist toutes les 30 minutes pendant les heures
+          d'ouverture du marché américain (15 h 30 – 22 h 00, heure de Paris). Chaque cycle suit le même
+          pipeline&nbsp;:
+        </p>
+        <ol>
+          <li><strong>Snapshot IBKR</strong> — récupération du dernier prix, du volume et de l'historique récent pour chaque symbole actif.</li>
+          <li><strong>Analyse Claude</strong> — le modèle évalue une probabilité de hausse à court terme (1 à 5 jours) et à moyen terme (1 à 3 mois), puis classe le titre dans un scénario A, B ou C.</li>
+          <li><strong>Score composite</strong> — les deux probabilités sont combinées en un score sur 10 (pondération 60&nbsp;% court terme, 40&nbsp;% moyen terme).</li>
+          <li><strong>Alerte Telegram</strong> — si le score atteint le seuil de déclenchement, une alerte détaillée est envoyée immédiatement.</li>
+        </ol>
+
+        <h3>Scénarios</h3>
+        <div class="scenario-grid">
+          <div class="scenario">
+            <span class="badge badge-a">A</span>
+            <strong>Acheter et garder</strong>
+            <p>Probabilités élevées sur les deux horizons. Le titre présente une configuration favorable&nbsp;; l'alerte propose un point d'entrée et un risque maximal.</p>
+          </div>
+          <div class="scenario">
+            <span class="badge badge-b">B</span>
+            <strong>Surveiller</strong>
+            <p>Signaux mitigés ou horizon incertain. Le titre reste dans la watchlist et sera réévalué à chaque scan, sans alerte sauf franchissement exceptionnel du seuil.</p>
+          </div>
+          <div class="scenario">
+            <span class="badge badge-c">C</span>
+            <strong>Éviter</strong>
+            <p>Probabilités faibles ou risque jugé excessif. Aucune alerte n'est émise&nbsp;; le scénario C peut motiver la désactivation du symbole.</p>
+          </div>
+        </div>
+
+        <h3>Seuils</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Paramètre</th><th class="num">Valeur</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Prob. court minimale (scénario A)</td>
+                <td class="num">65&nbsp;%</td>
+                <td>En dessous, le titre est classé B ou C selon le moyen terme.</td>
+              </tr>
+              <tr>
+                <td>Prob. moyen minimale (scénario A)</td>
+                <td class="num">60&nbsp;%</td>
+                <td>Confirme la tendance au-delà du très court terme.</td>
+              </tr>
+              <tr>
+                <td>Score de déclenchement</td>
+                <td class="num">≥ 8,0</td>
+                <td>Score composite à partir duquel une alerte Telegram est envoyée.</td>
+              </tr>
+              <tr>
+                <td>Fréquence d'analyse</td>
+                <td class="num">30 min</td>
+                <td>Uniquement pendant les heures d'ouverture du marché US.</td>
+              </tr>
+              <tr>
+                <td>Anti-spam</td>
+                <td class="num">4 h</td>
+                <td>Une seule alerte par symbole sur une fenêtre glissante de quatre heures.</td>
+              </tr>
+              <tr>
+                <td>Risque max par position</td>
+                <td class="num">8&nbsp;%</td>
+                <td>Plafond de perte tolérée, rappelé dans chaque alerte.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </article>
+    </section>
+
+  </main>
+
+  <footer class="page-foot">
+    Sentinel — données IBKR · analyse Anthropic · alertes Telegram
+  </footer>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
